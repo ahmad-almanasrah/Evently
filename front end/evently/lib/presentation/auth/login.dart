@@ -1,4 +1,4 @@
-import 'package:evently/presentation/singup/signup.dart';
+import 'package:evently/presentation/auth/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

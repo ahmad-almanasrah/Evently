@@ -1,6 +1,9 @@
-import 'package:evently/presentation/login/login.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/material.dart'; // Core Flutter widgets
+import 'package:flutter_svg/flutter_svg.dart'; // For your SVG logo
+import 'package:flutter_bloc/flutter_bloc.dart'; // For Bloc usage (context.read<AuthBloc>())
+import 'package:evently/logic/auth_bloc/auth_bloc.dart'; // Your AuthBloc class
+import 'package:evently/logic/auth_bloc/auth_event.dart'; // SignUpEvent
+import 'package:evently/presentation/auth/login.dart'; // For navigation to login page
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -14,6 +17,12 @@ class _SignupState extends State<Signup> {
   bool obscuretextvalue = true;
   bool isPasswordVisible1 = false;
   bool obscuretextvalue1 = true;
+
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   // Using your chosen Deep Navy color
   Color primaryColor = const Color(0xFF101127);
@@ -75,6 +84,7 @@ class _SignupState extends State<Signup> {
                     children: [
                       // Username
                       TextField(
+                        controller: usernameController,
                         keyboardType: TextInputType.text,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.person_outline,
@@ -92,6 +102,7 @@ class _SignupState extends State<Signup> {
 
                       // Email
                       TextField(
+                        controller: emailController,
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.email_outlined,
@@ -109,6 +120,7 @@ class _SignupState extends State<Signup> {
 
                       // Password
                       TextField(
+                        controller: passwordController,
                         keyboardType: TextInputType.visiblePassword,
                         obscureText: obscuretextvalue,
                         decoration: InputDecoration(
@@ -141,6 +153,7 @@ class _SignupState extends State<Signup> {
 
                       // Repeat Password
                       TextField(
+                        controller: confirmPasswordController,
                         keyboardType: TextInputType.visiblePassword,
                         obscureText: obscuretextvalue1,
                         decoration: InputDecoration(
@@ -178,6 +191,13 @@ class _SignupState extends State<Signup> {
                         height: 50,
                         child: ElevatedButton(
                           onPressed: () {
+                            context.read<AuthBloc>().add(SignUpEvent(
+                                  username: usernameController.text,
+                                  email: emailController.text,
+                                  password: passwordController.text,
+                                  confirmPassword:
+                                      confirmPasswordController.text,
+                                ));
                             // Add your signup logic here
                             print('Create Account Pressed');
                           },
