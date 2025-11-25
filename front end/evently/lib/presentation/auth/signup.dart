@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart'; // For your SVG logo
 import 'package:flutter_bloc/flutter_bloc.dart'; // For Bloc usage (context.read<AuthBloc>())
 import 'package:evently/logic/auth_bloc/auth_bloc.dart'; // Your AuthBloc class
 import 'package:evently/logic/auth_bloc/auth_event.dart'; // SignUpEvent
-import 'package:evently/presentation/auth/login.dart'; // For navigation to login page
+import 'package:evently/presentation/auth/login/login.dart'; // For navigation to login page
 
 class Signup extends StatefulWidget {
   const Signup({super.key});

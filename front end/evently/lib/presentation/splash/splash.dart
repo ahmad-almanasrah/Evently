@@ -2,7 +2,7 @@ import 'dart:async'; // Used for the navigation timer
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 // Import the Login Page
-import 'package:evently/presentation/auth/login.dart';
+import 'package:evently/presentation/auth/login/login.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
