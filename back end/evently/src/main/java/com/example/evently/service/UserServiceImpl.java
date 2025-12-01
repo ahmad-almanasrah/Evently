@@ -1,9 +1,6 @@
 package com.example.evently.service;
 
-import com.example.evently.dto.CreateUserDTO;
-import com.example.evently.dto.LoginDTO;
-import com.example.evently.dto.SendOtpDTO;
-import com.example.evently.dto.VerifyOtpDTO;
+import com.example.evently.dto.*;
 import com.example.evently.entity.User;
 import com.example.evently.repo.UserRepo;
 import org.springframework.mail.SimpleMailMessage;
@@ -49,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
         // Create Authentication object to pass to TokenService
         return new UsernamePasswordAuthenticationToken(
-                user.getUsername(), // or email if you prefer
+                user.getEmail(), // or email if you prefer
                 null,
                 List.of(new SimpleGrantedAuthority("read"))
         );
@@ -57,23 +54,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void createUser(CreateUserDTO dto){
+    public int createUser(CreateUserDTO dto) {
         String email = dto.email().toLowerCase().trim();
         String password = dto.password();
         String username = dto.username();
 
         if(userRepo.existsByEmail(email)){
-            throw new RuntimeException("Email already exists");
+            return 2; // Email already exists
         }
         if(userRepo.existsByUsername(username)){
-            throw new RuntimeException("Username already exists");
+            return 3; // Username already exists
         }
+
         User user = new User();
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
         user.setUsername(username);
         userRepo.save(user);
+
+        return 1; // Success
     }
+
 
     @Override
     public void sendUserOTP(SendOtpDTO dto) {
@@ -105,6 +106,19 @@ public class UserServiceImpl implements UserService {
         return 0;   // success
     }
 
+    @Override
+    public boolean restUserPassword(RestPasswordDTO dto){
+        String email = dto.email().toLowerCase().trim();
+        if (userRepo.existsByEmail(email)) {
+            User user = userRepo.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("Email not found"));
+            String password = passwordEncoder.encode(dto.newPassword());
+            user.setPassword(password);
+            userRepo.save(user);
+            return true;
+        }
+        return false;
+    }
 
     //functions
      private void sendEmail(String email, String otp) {

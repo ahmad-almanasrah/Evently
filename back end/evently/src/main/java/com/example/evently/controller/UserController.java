@@ -1,10 +1,7 @@
 package com.example.evently.controller;
 
-import com.example.evently.dto.CreateUserDTO;
-import com.example.evently.dto.LoginDTO;
+import com.example.evently.dto.*;
 
-import com.example.evently.dto.SendOtpDTO;
-import com.example.evently.dto.VerifyOtpDTO;
 import com.example.evently.service.TokenService;
 import com.example.evently.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -39,24 +36,40 @@ public class UserController {
     }
 
 
-    @PostMapping("/register")
-    public String createUser(@RequestBody CreateUserDTO dto) {
-        userService.createUser(dto);
-        return "success";
-    }
+        @PostMapping("/register")
+        public Map<String, Object> createUser(@RequestBody CreateUserDTO dto) {
+            int result = userService.createUser(dto);
 
-    @PostMapping("otp/request")
+            return switch (result) {
+                case 1 -> Map.of("status", "success", "message", "User created successfully");
+                case 2 -> Map.of("status", "fail", "message", "Email already exists");
+                case 3 -> Map.of("status", "fail", "message", "Username already exists");
+                default -> Map.of("status", "fail", "message", "Unknown error occurred");
+            };
+        }
+
+
+
+    @PostMapping("/otp/request")
     public String sendOTP(@RequestBody SendOtpDTO dto) {
         userService.sendUserOTP(dto);
         return "success";
     }
 
-    @PostMapping("otp/verify")
+    @PostMapping("/otp/verify")
     public String verifyOTP(@RequestBody VerifyOtpDTO dto) {
         if(userService.verifyUserOTP(dto) == 0)
         return "success";
         return "fail";
     }
+
+    @PostMapping("/resetPassword")
+    public String resetPasswrod(@RequestBody RestPasswordDTO dto){
+        if(userService.restUserPassword(dto))
+            return "success";
+        return "fail";
+    }
+
 
 
 }
