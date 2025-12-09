@@ -1,35 +1,30 @@
+import 'package:evently/presentation/auth/login/login.dart';
+import 'package:evently/presentation/auth/signup/signup.dart';
+import 'package:evently/presentation/home_layout/home_layout.dart';
+import 'package:evently/presentation/profile/profile.dart';
 import 'package:evently/presentation/splash/splash.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:evently/logic/auth_bloc/auth_bloc.dart';
-import 'package:evently/data/repo/auth/auth_repo.dart';
-import 'package:evently/data/sources/auth/auth_remote.dart';
 
 void main() {
-  final authRepo = AuthRepo(AuthRemote()); // Initialize your repository
-  runApp(MainApp(authRepo: authRepo));
+  runApp(const MainApp());
 }
 
 class MainApp extends StatelessWidget {
-  final AuthRepo authRepo;
-
-  const MainApp({super.key, required this.authRepo});
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<AuthBloc>(
-          create: (context) => AuthBloc(authRepo),
-        ),
-        // You can add more BlocProviders here in the future
-        // BlocProvider<AnotherBloc>(create: (_) => AnotherBloc()),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
-        home: const Splash(),
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      routes: {
+        '/login': (context) => const Login(),
+        '/signup': (context) => const Signup(),
+        // '/forgot_password': (context) => const Forgot_z(),
+        '/home': (context) => const HomeLayout(),
+        '/profile': (context) => const Profile(),
+      },
+      theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
+      home: const Splash(),
     );
   }
 }

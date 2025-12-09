@@ -10,6 +10,8 @@ public record CreateUserDTO(
         @NotBlank
         String username,
         @NotBlank
+        String fullName,
+        @NotBlank
         String password
 ) {
 }

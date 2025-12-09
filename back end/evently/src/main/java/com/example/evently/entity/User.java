@@ -21,6 +21,11 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String fullName;
+
+    public Long getID(){return id;}
+
     public String getEmail() {
         return email;
     }
@@ -44,4 +49,7 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String getFullName() {   return fullName;   }
+    public void setFullName(String fullName) {this.fullName = fullName;}
 }

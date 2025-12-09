@@ -1,35 +1,32 @@
 import 'package:dio/dio.dart';
 
-class LoginService {
+class RestPasswordService {
   final Dio dio;
 
-  LoginService({Dio? dioInstance}) : dio = dioInstance ?? Dio() {
-    dio.options.baseUrl = "http://192.168.1.14:8080/auth"; // Android emulator";
+  RestPasswordService({Dio? dioInstance}) : dio = dioInstance ?? Dio() {
+    dio.options.baseUrl = "http://10.0.2.2:8080/auth"; // Android emulator";
     dio.options.headers["Content-Type"] = "application/json";
   }
 
-  Future<String?> login(String email, String password) async {
+  Future<void> restPassword(String email) async {
     try {
       final response = await dio.post(
-        '/login',
+        '/reset-password',
         data: {
           "email": email,
-          "password": password,
         },
       );
 
       final data = response.data;
 
-      if (data["status"] == "success") {
-        return data["token"];
-      } else {
-        // Login failed or error
-        throw Exception(data["message"] ?? "Login failed");
+      if (data["status"] != "success") {
+        // Reset password failed or error
+        throw Exception(data["message"] ?? "Reset password failed");
       }
     } on DioException catch (e) {
       if (e.response != null) {
         throw Exception(e.response?.data["message"] ??
-            "Login failed: ${e.response?.statusCode}");
+            "Reset password failed: ${e.response?.statusCode}");
       } else {
         throw Exception("Network error: ${e.message}");
       }

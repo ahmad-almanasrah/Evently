@@ -50,11 +50,11 @@ public class UserController {
 
 
 
-    @PostMapping("/otp/request")
-    public String sendOTP(@RequestBody SendOtpDTO dto) {
-        userService.sendUserOTP(dto);
-        return "success";
-    }
+//    @PostMapping("/otp/request")
+//    public map<String,String> sendOTP(@RequestBody SendOtpDTO dto) {
+//        userService.sendUserOTP(dto);
+//        return Map.of("status","success");
+//    }
 
     @PostMapping("/otp/verify")
     public String verifyOTP(@RequestBody VerifyOtpDTO dto) {

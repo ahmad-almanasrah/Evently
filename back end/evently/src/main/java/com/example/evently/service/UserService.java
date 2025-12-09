@@ -9,4 +9,5 @@ public interface UserService {
     void sendUserOTP(SendOtpDTO dto);
     int verifyUserOTP(VerifyOtpDTO dto);
     boolean restUserPassword(RestPasswordDTO dto);
+    ProfileDTO getUserProfile(String email);
 }

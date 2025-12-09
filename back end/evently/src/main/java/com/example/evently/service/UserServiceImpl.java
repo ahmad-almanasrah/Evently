@@ -2,7 +2,10 @@ package com.example.evently.service;
 
 import com.example.evently.dto.*;
 import com.example.evently.entity.User;
+import com.example.evently.mapper.UserMapper;
 import com.example.evently.repo.UserRepo;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,12 +15,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
 
 
+    @Value("${app.base-url}")
+    private String baseUrl;
+
+    private final UserMapper userMapper;
     private String OTP  = "";
     private Long expiration ;
 
@@ -26,10 +35,11 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final JavaMailSender javaMailSender;
 
-    public UserServiceImpl(UserRepo userRepo, BCryptPasswordEncoder passwordEncoder, JavaMailSender javaMailSender) {
+    public UserServiceImpl(UserRepo userRepo, BCryptPasswordEncoder passwordEncoder, JavaMailSender javaMailSender, UserMapper userMapper) {
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
         this.javaMailSender = javaMailSender;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -58,6 +68,7 @@ public class UserServiceImpl implements UserService {
         String email = dto.email().toLowerCase().trim();
         String password = dto.password();
         String username = dto.username();
+        String fullName = dto.fullName();
 
         if(userRepo.existsByEmail(email)){
             return 2; // Email already exists
@@ -67,6 +78,7 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = new User();
+        user.setFullName(fullName);
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
         user.setUsername(username);
@@ -120,6 +132,22 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
+    @Override
+    public ProfileDTO getUserProfile(String email) {
+        email = email.toLowerCase().trim();
+        User user = userRepo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Email not found"));
+        String fileName = user.getID() + ".jpg";
+        Path imagePath = Paths.get("uploads/" + fileName);
+        String relativePath;
+        if (imagePath.toFile().exists()) {
+            relativePath = "uploads/" + fileName;
+        } else {
+            relativePath = "uploads/default.jpg";
+        }
+        String finalUrl = baseUrl + "/" + relativePath;
+        return userMapper.toDto(user, 0, 0, 0, finalUrl);
+    }
     //functions
      private void sendEmail(String email, String otp) {
          SimpleMailMessage message = new SimpleMailMessage();

@@ -67,7 +67,8 @@ public class SecurityConfig {
                                 "/auth/register",
                                 "/auth/otp/request",
                                 "/auth/otp/verify",
-                                "/auth/resetPassword"
+                                "/auth/resetPassword",
+                                "/uploads/**"
                         ).permitAll()
                         // login is public
                         .anyRequest().authenticated()
