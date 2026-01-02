@@ -1,0 +1,39 @@
+name: evently
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  cloudinary_public: ^0.23.1
+  dio: ^5.9.0
+  flutter:
+    sdk: flutter
+  flutter_dotenv: ^6.0.0
+  flutter_svg: ^2.2.3
+  image_picker: ^1.2.1
+  intl: ^0.20.2
+  provider: ^6.1.5+1
+  qr_flutter: ^4.1.0       # For GENERATING the code on screen
+  mobile_scanner: ^7.1.4   # For SCANNING the code with camera
+  permission_handler: ^11.3.0 # To ask for Camera permission
+  shared_preferences: ^2.5.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  
+  # ⚠️ IMPORTANT:
+  # Move your 'assets' folder OUT of 'lib'.
+  # It should be at the top level of your project:
+  # evently/assets/images/logo.svg
+  assets:
+    - assets/images/logo.svg
+    - .env
+
